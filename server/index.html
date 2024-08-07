@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .loading {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cookie Value</h1>
+        <p id="cookie-value" class="loading">Fetching cookie...</p>
+    </div>
+
+    <script>
+        // Function to get a specific cookie by name
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        // Function to perform an action with the cookie value
+        function useCookie() {
+            const cookieName = 'session_id'; // Change this to your cookie's name
+            const cookieValue = getCookie(cookieName);
+
+            const cookieValueElement = document.getElementById('cookie-value');
+
+            if (cookieValue) {
+                // Display the cookie value on the page
+                cookieValueElement.textContent = `Cookie value: ${cookieValue}`;
+                cookieValueElement.classList.remove('loading');
+
+                // Example action: Send the cookie value to a server
+                fetch('https://example.com/endpoint', {  // Replace with your server URL
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ cookie: cookieValue })
+                })
+                .then(response => response.json())
+                .then(data => console.log('Server response:', data))
+                .catch(error => console.error('Error:', error));
+            } else {
+                cookieValueElement.textContent = 'Cookie not found.';
+                cookieValueElement.classList.remove('loading');
+            }
+        }
+
+        // Call the function to use the cookie
+        useCookie();
+    </script>
+</body>
+</html>
